@@ -1,0 +1,12 @@
+group 'net.securustech.ews'
+
+apply plugin: 'java'
+
+dependencies {
+
+    compile project(":ews-logger")
+    testCompile("junit:junit")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("com.h2database:h2")
+
+}

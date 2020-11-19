@@ -1,0 +1,18 @@
+group 'net.securustech.ews'
+
+apply plugin: 'java'
+
+dependencies {
+
+    compile project(":ews-logger")
+    compile project(":ews-repository")
+
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-test', version: '2.0.2.RELEASE'
+
+    testCompile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.0.0.RELEASE'
+
+    testCompile 'junit:junit'
+
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.18.3'
+
+}

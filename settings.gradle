@@ -1,0 +1,6 @@
+rootProject.name = 'ews-core'
+include 'ews-logger'
+include 'ews-repository'
+include 'ews-service'
+include 'ews-rest-es'
+include 'ews-util'

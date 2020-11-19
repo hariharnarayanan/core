@@ -1,0 +1,338 @@
+spring:
+  profiles:
+    active: local
+  adminServer:
+    host: localhost
+    port: 8761
+  cloud:
+    config:
+      enabled: false
+
+management:
+  security:
+    enabled: false
+
+security:
+  basic:
+    enabled: false
+  ignored: /**
+
+eureka:
+  client:
+    enabled: false
+
+---
+
+spring:
+  profiles: local
+
+  kafka:
+#    bootstrap-servers: ld-midsrvcs01.lab.securustech.net:9092,ld-midsrvcs01.lab.securustech.net:9023,ld-midsrvcs01.lab.securustech.net:9024  # Comma-delimited list of host:port pairs to use for establishing the initial connection to the Kafka cluster.
+#    client-id: esp_visitors # Id to pass to the server when making requests; used for server-side logging.
+#    enable-auto-commit: true # If true the consumer's offset will be periodically committed in the background.
+#    group-id: esp_svv # Unique string that identifies the consumer group this consumer belongs to.
+    enabled: true   # Kafka enabled flag, if true kafka message will be sent
+#    consumer:
+#      enable-auto-commit: true # If true the consumer's offset will be periodically committed in the background.
+
+# ZOOKEEPER
+  cloud.zookeeper.connect-string: 10.6.247.197:2181
+
+  datasource:
+    platform: h2
+    continue-on-error: true
+    driverClassName: org.h2.Driver
+    tomcat:
+      username: sa
+      password:
+#      url: "jdbc:h2:mem:SCN_OPDB;DB_CLOSE_DELAY=-1;MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=3;INIT=CREATE SCHEMA IF NOT EXISTS SCN_OPDB\\;CREATE SCHEMA IF NOT EXISTS SIGNON\\;CREATE SCHEMA IF NOT EXISTS WEBCIS_SECURITY\\;CREATE SCHEMA IF NOT EXISTS SCN_PROV\\;CREATE SCHEMA IF NOT EXISTS SCN_EDB\\;CREATE SCHEMA IF NOT EXISTS SCN_TELCO\\;CREATE SCHEMA IF NOT EXISTS SCHEDULE_MGR\\;CREATE SCHEMA IF NOT EXISTS CDRMART\\;CREATE SCHEMA IF NOT EXISTS SCN_AUDIT\\;CREATE SCHEMA IF NOT EXISTS SCN_GA\\;SET SCHEMA SCN_OPDB;"
+      url: "jdbc:h2:mem:SCN_OPDB;DB_CLOSE_DELAY=-1;MODE=Oracle;INIT=CREATE SCHEMA IF NOT EXISTS SCN_OPDB\\;CREATE SCHEMA IF NOT EXISTS SIGNON\\;CREATE SCHEMA IF NOT EXISTS WEBCIS_SECURITY\\;CREATE SCHEMA IF NOT EXISTS SCN_PROV\\;CREATE SCHEMA IF NOT EXISTS SCN_EDB\\;CREATE SCHEMA IF NOT EXISTS SCN_TELCO\\;CREATE SCHEMA IF NOT EXISTS SCHEDULE_MGR\\;CREATE SCHEMA IF NOT EXISTS CDRMART\\;CREATE SCHEMA IF NOT EXISTS SCN_AUDIT\\;CREATE SCHEMA IF NOT EXISTS SCN_GA\\;CREATE SCHEMA IF NOT EXISTS SCN_VB\\;CREATE SCHEMA IF NOT EXISTS SCN_USAGE\\;SET SCHEMA SCN_OPDB;"
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        default_schema: SCN_OPDB
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 500
+          batch_versioned_data: true
+
+  data:
+    elasticsearch:
+      rest:
+        uri: http://localhost:9200
+
+# ---------------------------------------
+# MONGO PROVTOOLS DATABASE CONFIGURATION
+# ---------------------------------------
+    mongodb:
+      database: provtool
+      uri: mongodb://ewsuser:3wsus3r@10.6.242.107:27017,10.6.242.237:27017/?authSource=provtool&authMechanism=SCRAM-SHA-1
+
+es:
+  index-name:
+    summary: summary-dev
+    dtnsummary: dtn-dev
+    inmate: inmate-info-dev
+    facilityhierarchy: facility-hierarchy-dev
+    inmateform: inmate-form-config-dev
+  docType: _doc
+  dtn: dtnSummary
+  docTypeNm:
+    inmate: inmateSummary
+
+cdrmart:
+  datasource:
+    platform: h2
+    continue-on-error: true
+    driverClassName: org.h2.Driver
+    tomcat:
+      username: sa
+      password:
+  #   url: "jdbc:h2:mem:SCN_OPDB;DB_CLOSE_DELAY=-1;MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=3;INIT=CREATE SCHEMA IF NOT EXISTS SCN_OPDB\\;CREATE SCHEMA IF NOT EXISTS SIGNON\\;CREATE SCHEMA IF NOT EXISTS SCN_PROV\\;CREATE SCHEMA IF NOT EXISTS SCN_EDB\\;CREATE SCHEMA IF NOT EXISTS SCN_TELCO\\;CREATE SCHEMA IF NOT EXISTS SCHEDULE_MGR\\;CREATE SCHEMA IF NOT EXISTS CDRMART\\;SET SCHEMA SCN_OPDB;"
+      url: "jdbc:h2:mem:SCN_OPDB;DB_CLOSE_DELAY=-1;MODE=Oracle;INIT=CREATE SCHEMA IF NOT EXISTS SCN_OPDB\\;CREATE SCHEMA IF NOT EXISTS SIGNON\\;CREATE SCHEMA IF NOT EXISTS SCN_PROV\\;CREATE SCHEMA IF NOT EXISTS SCN_EDB\\;CREATE SCHEMA IF NOT EXISTS SCN_TELCO\\;CREATE SCHEMA IF NOT EXISTS SCHEDULE_MGR\\;CREATE SCHEMA IF NOT EXISTS CDRMART\\;SET SCHEMA SCN_OPDB;"
+
+cdrrecording:
+  datasource:
+    platform: h2
+    continue-on-error: true
+    driverClassName: org.h2.Driver
+    tomcat:
+      username: sa
+      password:
+      url: "jdbc:h2:mem:SCN_REC1D;DB_CLOSE_DELAY=-1;MODE=Oracle;INIT=CREATE SCHEMA IF NOT EXISTS SCN_RECORD\\;SET SCHEMA SCN_RECORD;"
+
+cdratlantarecording:
+  datasource:
+    platform: h2
+    continue-on-error: true
+    driverClassName: org.h2.Driver
+    tomcat:
+      username: sa
+      password:
+      url: "jdbc:h2:mem:SCN_RECA1D;DB_CLOSE_DELAY=-1;MODE=Oracle;INIT=CREATE SCHEMA IF NOT EXISTS SCN_RECORD\\;SET SCHEMA SCN_RECORD;"
+
+telecoreservice:
+  datasource:
+    platform: h2
+    continue-on-error: true
+    driverClassName: org.h2.Driver
+    tomcat:
+      username: sa
+      password:
+      url: "jdbc:h2:mem:TELECORE_SERVICES;DB_CLOSE_DELAY=-1;MODE=Oracle;INIT=CREATE SCHEMA IF NOT EXISTS TELECORE_SERVICES\\;SET SCHEMA TELECORE_SERVICES;"
+
+
+billing:
+  customer.service.url: http://ld-billing01.corp.securustech.net:8083/dev-ng-svv/billingservice/billingservice.svc
+  service.url:  http://ld-billing01.corp.securustech.net:8084/DEV/VideoService/v1
+  setup:
+    site.id: 00000
+    validation.plan: video-visitation
+  service:
+    code: VGENERIC
+  debit:
+    service:
+      url: http://ld-billing01.corp.securustech.net:8088/DEV/SCPDebitSvc/SCPDebitService.asmx
+      new.url: http://ld-billing01.corp.securustech.net:8088/DEV/BillingDebitSvc/BillingDebitService.asmx
+      action:
+        baseUrl: http://securustech.net/webservices/Securus.Corp.SCPDebit
+        activateCreateAccountUrl: ${billing.debit.service.action.baseUrl}/ActivateCreateAccount
+        activeCallCheckUrl: ${billing.debit.service.action.baseUrl}/ActiveCallCheck
+        accountByInmateIdUrl: ${billing.debit.service.action.baseUrl}/GetAccountByInmateID
+        deactivateAccountUrl: ${billing.debit.service.action.baseUrl}/DeactivateAccount
+        getInmateTransactionsUrl: ${billing.debit.service.action.baseUrl}/GetInmateTransactions
+        addFundsUrl: ${billing.debit.service.action.baseUrl}/AddFunds
+        addTransactionUrl: ${billing.debit.service.action.baseUrl}/AddTransaction
+        getCashFlowSettingUrl: ${billing.debit.service.action.baseUrl}/GetCashFlowSetting
+        postDebitUrl:  ${billing.debit.service.action.baseUrl}/PostDebit
+        postCreditUrl: ${billing.debit.service.action.baseUrl}/PostCredit
+
+crmgateway:
+  customer.service.url: http://psl-entapp01.corp.securustech.net:8083/qa/crmgateway/crmgateway.svc
+
+ems:
+  datasource:
+      platform: h2
+      continue-on-error: true
+      driverClassName: org.h2.Driver
+      tomcat:
+        username: sa
+        password:
+        url: "jdbc:h2:mem:SCN_EMS;DB_CLOSE_DELAY=-1;MODE=Oracle;INIT=CREATE SCHEMA IF NOT EXISTS SCN_OPDB\\;SET SCHEMA SCN_OPDB;"
+
+  email.notification.url: http://psl-devnotieng01:8080/ems
+  template.id:
+    manual.approval: 32
+    auto.approval: 75
+    rejected.invalid.id: 72
+    rejected.invalid.picture: 73
+    rejected.invalid.bar.id.picture: 76
+    rejected.other: 74
+  notification:
+    send: ems_notification_send
+
+ews:
+  service:
+    customers:
+      url: http://ewsdev.lab.securustech.net:8761/ews/customers
+  retry:
+    enabled: true
+    schedule:
+      name: RetryFailedEventsEveryMinute
+      frequency: 0 * * ? * *
+    count:
+      max: 3
+  internal:
+    delay: 5000
+    multiplier: 2.0
+    max:
+      attempts: 2
+      delay: 15000
+  timer:
+    retry: ews_timer_retry
+    schedule:
+      event: ews_timer_schedule_event
+    syslog:
+      retry: ews_timer_syslog_retry
+    visits:
+      retry: ews_timer_visits_retry
+  svv:
+    visit:
+      publish: ews_svv_visit_publish
+    vdr:
+      publish: ews_svv_vdr_publish
+  zipkin:
+    enabled: false
+    server: zgreen.lab.securustech.net
+    port: 9411
+
+opentracing:
+  zipkin:
+    http-sender:
+      baseUrl: http://${ews.zipkin.server}:${ews.zipkin.port}
+
+h2:
+  tcp:
+    port: 30030
+  web:
+    port: 20030
+    enabled: true
+
+scheduler:
+    service.url: http://10.6.246.40:8080/scheduler/services
+
+3ci:
+  optout:
+    service:
+      url: https://platform.3cinteractive.com:443/api/workflow-initiator.php
+
+mconnstore:
+  service:
+    server: dev=http://10.6.242.224:8080,dev=http://10.6.242.189:8080
+
+# -----------------------------------
+# SVV MYSQL DATABASE CONFIGURATION
+# -----------------------------------
+svv:
+  mysql:
+    datasource:
+      tomcat:
+        url: "jdbc:mysql://10.6.244.38:3306/tcdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+        username: ews_app_user
+        password: ewsAppUser
+        testOnBorrow: true
+        test-while-idle: true
+        removeAbandoned: true
+        validationInterval: 30000
+        timeBetweenEvictionRunsMillis: 30000
+        validationQuery: "select 1"
+        driver-class-name: com.mysql.cj.jdbc.Driver
+  service:
+    url: http://10.6.176.100/api
+  ems:
+    upsert: svv_ems_upsert
+  inmate:
+    move: SVV_INMATE_MOVEMENT_VW
+    upsert: svv_inmate_upsert
+  pvl:
+    initial:
+      load: svv_pvl_initial_load
+    upsert: svv_pvl_upsert
+  rule:
+    upsert: svv_rule_upsert
+  schedule:
+    upsert: svv_schedule_upsert
+  syslog:
+    upsert: svv_syslog_upsert
+  tag:
+    master:
+      initial:
+        load: svv_tag_master_initial_load
+    assc:
+      initial:
+        load: svv_tag_assc_initial_load
+  vdr:
+    upsert: svv_vdr_upsert
+  visit:
+    change: svv_visit_change
+    emergency: svv_visit_emergency
+    initial:
+      load: svv_visit_initial_load
+    upsert: svv_visit_upsert
+  visitor:
+    initial:
+      load: svv_visitor_initial_load
+    upsert: svv_visitor_upsert
+  vfa:
+    initial:
+      load: svv_vfa_initial_load
+
+esp:
+  initialLoad:
+    pageSize: 500
+
+#KAFKA TOPICS
+auditlog:
+  change:
+    upsert: auditlog_change_upsert
+  comm:
+    upsert: auditlog_comm_upsert
+  search:
+    upsert: auditlog_search_upsert
+  system:
+    upsert: auditlog_system_upsert
+  web:
+    upsert: auditlog_web_upsert
+
+eimport:
+  syslog:
+    upsert: eimport_syslog_upsert
+
+cdr:
+  notes:
+    upsert: cdr_notes_upsert
+scp:
+  inmateform:
+    syslog: scp_inmateform_syslog
+
+batch:
+  chunkSize:
+    ngDriven: 1000
+    dataDriven: 1000
+    cdrCommActivity: 1000
+  thread:
+    step:
+      corePoolSize: 30
+      maxPoolSize: 30
+      queueCapacity: 10000
+    job:
+      corePoolSize: 3
+      maxPoolSize: 3
+      queueCapacity: 100
+---

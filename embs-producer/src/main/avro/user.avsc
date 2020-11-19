@@ -1,0 +1,9 @@
+{"namespace": "net.securustech.embs.producer.avro",
+  "type": "record",
+  "name": "User",
+  "fields": [
+    {"name": "NAME", "type": "string"},
+    {"name": "FAVORITE_NUMBER",  "type": ["int", "null"]},
+    {"name": "FAVORITE_COLOR", "type": ["string", "null"]}
+  ]
+}

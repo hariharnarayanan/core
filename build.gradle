@@ -1,0 +1,288 @@
+buildscript {
+
+    String bambooBuildNumber = System.getProperty("bamboo_buildNumber")
+    if (bambooBuildNumber == null) {
+
+        bambooBuildNumber = System.getenv('bamboo_buildNumber')
+    }
+    if (bambooBuildNumber == null) {
+
+        bambooBuildNumber = "0"
+    }
+
+    ext {
+
+        springBootVersion = '2.2.6.RELEASE'
+        springKafkaVersion = '2.4.4.RELEASE'
+        embsCoreVersion = '1.1.0_56'
+        ewsGradleVersion = '1.2.6_18'
+        lombokVersion = "1.18.12"
+    }
+
+    repositories {
+
+        mavenLocal()
+        mavenCentral()
+
+        maven {
+
+            url "http://es-nexus01.dal.securustech.net/content/repositories/public/"
+        }
+        maven {
+
+            url "http://www.datanucleus.org/downloads/maven2/"
+        }
+        maven {
+
+            url "https://repo.spring.io/libs-milestone/"
+        }
+        maven {
+
+            url "https://artifacts.alfresco.com/nexus/content/groups/public/"
+        }
+        maven {
+
+            url 'https://repo.adobe.com/nexus/content/repositories/public/'
+        }
+        maven {
+
+            url "http://repository.jboss.org/nexus/content/groups/public/"
+        }
+        maven {
+
+            url "https://repo.spring.io/milestone/"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+
+        classpath "net.securustech.ews:ews-gradle:${ewsGradleVersion}"
+        classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: "${springBootVersion}"
+
+        ant.unjar src: configurations.classpath.find { it.name.matches '.*ews-gradle.*' }, dest: 'build/gradle'
+    }
+}
+
+apply from: 'build/gradle/ews-release.gradle'
+
+println "CALLER@Gradle@BambooBuildNumber >>> " + project.buildNumber
+println "CALLER@Gradle@BambooBuildTime >>> " + project.buildTime
+println "CALLER@Gradle@GitTagName >>> " + project.gitTagName
+
+allprojects {
+
+    group 'net.securustech.ews'
+
+    apply plugin: 'jacoco'
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'maven'
+
+    if (!project.name.equalsIgnoreCase("ews-core")) {
+
+        apply plugin: 'io.spring.dependency-management'
+    }
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    dependencyManagement {
+        imports {
+            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR4'
+        }
+
+        dependencies {
+            //compile dependency
+            dependency "net.securustech.embs:embs-core:${embsCoreVersion}"
+            dependency 'com.github.ulisesbocchio:jasypt-spring-boot-starter:1.16'
+            dependency 'org.json:json:20170516'
+            dependency 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.5.4'
+            dependency 'org.elasticsearch:elasticsearch:6.5.4'
+            dependency 'org.apache.tomcat.embed:tomcat-embed-core:9.0.1'
+            dependency 'org.apache.tomcat:tomcat-jdbc:9.0.1'
+            dependency 'org.codehaus.jackson:jackson-jaxrs:1.9.9'
+            dependency 'org.hibernate:hibernate-validator:6.0.7.Final'
+            dependency 'javax.validation:validation-api:2.0.0.Final'
+            dependency 'org.jolokia:jolokia-core:1.3.7'
+            dependency 'net.java.dev.jna:jna:4.1.0'
+            dependency 'com.google.code.gson:gson:2.8.0'
+            dependency 'org.glassfish.jersey.inject:jersey-hk2:2.26'
+            dependency 'com.flipkart.zjsonpatch:zjsonpatch:0.4.1'
+
+            //test dependency
+            dependency 'org.springframework:spring-test:4.3.6.RELEASE'
+            dependency 'org.mockito:mockito-core:2.18.3'
+        }
+    }
+
+    repositories {
+
+        mavenLocal()
+        mavenCentral()
+
+        maven {
+
+            url "http://es-nexus01.dal.securustech.net/content/repositories/public/"
+        }
+//        maven {
+//
+//            url "https://mvnrepository.com/artifact/bilus/jdbc"
+//        }
+        maven {
+
+            url "https://artifacts.alfresco.com/nexus/content/groups/public/"
+        }
+        maven {
+
+            url 'https://repo.adobe.com/nexus/content/repositories/public/'
+        }
+        maven {
+
+            url "https://repo.spring.io/milestone/"
+        }
+        maven {
+            url 'https://repo.spring.io/libs-milestone'
+        }
+    }
+
+    dependencies {
+
+        compileOnly("org.projectlombok:lombok:${lombokVersion}")
+        testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+        annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+        testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+
+        compile("net.securustech.embs:embs-core")
+
+        compile 'org.apache.commons:commons-lang3'
+
+        compile group: 'io.zipkin.brave', name: 'brave', version: '5.0.0'
+        compile group: 'io.opentracing', name: 'opentracing-api', version: '0.31.0'
+        compile group: 'io.zipkin.zipkin2', name: 'zipkin', version: '2.8.4'
+        compile group: 'io.opentracing.brave', name: 'brave-opentracing', version: '0.31.0'
+        compile group: 'io.zipkin.reporter2', name: 'zipkin-reporter', version: '2.6.1'
+        compile group: 'io.zipkin.reporter2', name: 'zipkin-sender-okhttp3', version: '2.6.1'
+        compile group: 'io.opentracing.contrib', name: 'opentracing-spring-zipkin-web-starter', version: '0.2.0'
+
+
+        compile('org.springframework.boot:spring-boot-starter-actuator')
+        compile('org.springframework.boot:spring-boot-starter-security')
+
+        compile('org.springframework.boot:spring-boot-starter-web')
+
+        compile 'org.springframework.cloud:spring-cloud-starter-config'
+
+        compile group: 'org.springframework.cloud', name: 'spring-cloud-commons', version: '2.2.2.RELEASE'
+        compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-kubernetes-all', version: '1.1.2.RELEASE'
+        compile group: 'org.springframework.cloud', name: 'spring-cloud-dependencies', version: 'Hoxton.SR4'
+
+        compileOnly 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+        compile 'org.springframework:spring-core'
+
+        compile 'org.springframework:spring-context'
+
+        compile 'org.springframework:spring-web'
+
+        compile 'org.springframework:spring-webmvc'
+
+        compile 'org.springframework:spring-beans'
+
+        compile 'org.springframework:spring-aop'
+
+        compile 'org.aspectj:aspectjweaver'
+
+        compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.0.RELEASE'
+
+//        compile group: 'bilus', name: 'jdbc', version: '12.1.0.1.0'
+        compile group: 'com.oracle', name: 'ojdbc8', version: '12.2.0.1.0'
+
+        compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+        compile('org.springframework.boot:spring-boot-starter-data-jpa')
+                {
+                    exclude group: 'com.zaxxer', module: 'HikariCP'
+                }
+
+        compile('org.springframework.boot:spring-boot-starter-data-elasticsearch:2.1.2.RELEASE')
+
+        compile group: 'org.springframework.data', name: 'spring-data-elasticsearch', version: '3.1.12.RELEASE'
+
+        compile 'com.github.ulisesbocchio:jasypt-spring-boot-starter'
+
+        compile 'org.json:json'
+
+        compileOnly 'org.elasticsearch.client:elasticsearch-rest-high-level-client'
+
+        compile 'org.apache.tomcat.embed:tomcat-embed-core'
+
+        compile 'org.slf4j:slf4j-api'
+
+        compile 'com.fasterxml.jackson.core:jackson-annotations'
+
+        compile 'org.codehaus.jackson:jackson-jaxrs'
+
+        compile 'org.hibernate.validator:hibernate-validator'
+
+        compile 'javax.validation:validation-api'
+
+        compile 'org.jolokia:jolokia-core'
+
+        compile 'com.h2database:h2'
+
+        compile 'org.apache.tomcat:tomcat-jdbc'
+
+        compile 'org.glassfish.jersey.core:jersey-client'
+
+        compile('pl.allegro.tech:embedded-elasticsearch:2.7.0')
+
+        compile group: 'org.springframework.kafka', name: 'spring-kafka', version: "${springKafkaVersion}"
+
+        testCompile 'ch.qos.logback:logback-classic'
+        testCompile 'org.springframework:spring-test'
+        testCompile 'com.fasterxml.jackson.core:jackson-core'
+        testCompile 'com.fasterxml.jackson.core:jackson-databind'
+
+        testCompile group: 'org.mockito', name: 'mockito-core', version: '2.18.3'
+
+        testCompile 'junit:junit'
+
+        testCompile group: 'org.hamcrest', name: 'hamcrest-core'
+        testCompile group: 'commons-logging', name: 'commons-logging', version: '1.2'
+        testCompile group: 'org.springframework', name: 'spring-core'
+        testCompile group: 'org.springframework.retry', name: 'spring-retry'
+        testCompile group: 'org.springframework', name: 'spring-beans'
+        testCompile group: 'org.springframework', name: 'spring-aop'
+        testCompile group: 'org.springframework', name: 'spring-expression'
+        testCompile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1'
+        testCompile group: 'ch.qos.logback', name: 'logback-core'
+        testCompile group: 'org.glassfish.jersey.core', name: 'jersey-common'
+    }
+
+    test {
+        systemProperties System.properties
+        systemProperties['user.dir'] = workingDir
+    }
+}
+
+dependencies {
+
+    compile project(":ews-logger")
+    compile project(":ews-repository")
+    compile project(":ews-service")
+    compile project(":ews-rest-es")
+    compile project(":ews-util")
+}
+
+jar {
+
+    subprojects.each { subproject ->
+        from subproject.configurations.archives.allArtifacts.files.collect {
+            zipTree(it)
+        }
+    }
+}

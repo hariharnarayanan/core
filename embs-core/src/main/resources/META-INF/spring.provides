@@ -1,0 +1,1 @@
+provides: spring-cloud-starter-zookeeper-discovery, spring-kafka, rxjava

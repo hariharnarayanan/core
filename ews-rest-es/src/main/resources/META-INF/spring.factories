@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+net.securustech.ews.data.elasticsearch.rest.autoconfigure.ElasticsearchRestAutoConfiguration,\
+net.securustech.ews.data.elasticsearch.rest.autoconfigure.ElasticsearchRestDataAutoConfiguration

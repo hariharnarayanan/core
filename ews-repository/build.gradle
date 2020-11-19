@@ -1,0 +1,5 @@
+group 'net.securustech.ews'
+
+description = 'EWS-Core Repository...'
+
+apply plugin: 'java'

@@ -1,0 +1,53 @@
+
+spring:
+  application:
+    name: embs-consumer
+  profiles.active: local
+  main:
+    web-application-type: none
+
+# APACHE KAFKA (KafkaProperties)
+  kafka:
+#    client-id: embs_consumer # Id to pass to the server when making requests; used for server-side logging.
+#    group-id: mw_embs # Unique string that identifies the consumer group this consumer belongs to.
+    consumer:
+      enable-auto-commit: true # If true the consumer's offset will be periodically committed in the background.
+
+logging:
+  file: ./logs/embs-consumer_app.log
+logging.level.org: ERROR
+logging.level.net.securustech.embs: INFO
+
+server:
+  port: 8899
+
+---
+
+spring:
+  profiles: local
+
+# ZOOKEEPER
+  cloud.zookeeper.connect-string: ld-midsrvcs01.lab.securustech.net:2181,ld-midsrvcs01.lab.securustech.net:2182
+
+---
+
+spring:
+  profiles: dev
+
+# ZOOKEEPER
+  cloud.zookeeper.connect-string: ld-midsrvcs01.lab.securustech.net:2181,ld-midsrvcs01.lab.securustech.net:2182
+
+---
+
+spring:
+  profiles: qa
+
+# ZOOKEEPER
+  cloud.zookeeper.connect-string: lq-midsrvcs01.lab.securustech.net:2181,lq-midsrvcs01.lab.securustech.net:2182,lq-midsrvcs02.lab.securustech.net:2181,lq-midsrvcs02.lab.securustech.net:2182
+
+---
+
+spring:
+  profiles: prod
+
+---

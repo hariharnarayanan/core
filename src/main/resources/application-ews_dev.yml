@@ -1,0 +1,383 @@
+spring:
+  profiles:
+    active: local
+  adminServer:
+    host: localhost
+    port: 8761
+  cloud:
+    config:
+      enabled: false
+
+management:
+  security:
+    enabled: false
+
+security:
+  basic:
+    enabled: false
+  ignored: /**
+
+---
+
+spring:
+  profiles: ews_dev
+
+  kafka:
+#    bootstrap-servers: ld-midsrvcs01.lab.securustech.net:9092,ld-midsrvcs01.lab.securustech.net:9023,ld-midsrvcs01.lab.securustech.net:9024  # Comma-delimited list of host:port pairs to use for establishing the initial connection to the Kafka cluster.
+#    client-id: esp_visitors # Id to pass to the server when making requests; used for server-side logging.
+#    group-id: esp_svv # Unique string that identifies the consumer group this consumer belongs to.
+    enabled: true   # Kafka enabled flag, if true kafka message will be sent
+#    consumer:
+#      enable-auto-commit: true # If true the consumer's offset will be periodically committed in the background.
+
+# ZOOKEEPER
+  cloud.zookeeper.connect-string: 10.6.247.197:2181
+
+
+   # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+  datasource:
+    tomcat:
+      driver-class-name: oracle.jdbc.driver.OracleDriver # Fully qualified name of the JDBC driver. Auto-detected based on the URL by default.
+      url: jdbc:oracle:thin:@//xd01-scan.lab.securustech.net:1540/SCNDEV # JDBC url of the database.
+      username: ews_app_user
+      password: ews_app_user
+      testOnConnect: true
+      testOnReturn: true
+      testOnBorrow: true
+      testWhileIdle: true
+      removeAbandoned: true
+      validationQuery: "select 1 from dual"
+      validationQueryTimeout: 60
+      timeBetweenEvictionRunsMillis: 3600000
+      logAbandoned: true
+      initialSize: 10
+      maxActive: 10
+      maxIdle: 10
+      minIdle: 10
+
+  data:
+    elasticsearch:
+      rest:
+        uri: http://ld-nges01:9200
+        username: elastic
+        password: changeme
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      show-sql: true
+    properties:
+      hibernate:
+        default_schema: SCN_OPDB
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 500
+          batch_versioned_data: true
+
+# ---------------------------------------
+# MONGO PROVTOOLS DATABASE CONFIGURATION
+# ---------------------------------------
+    mongodb:
+      database: provtool
+      uri: mongodb://ewsuser:3wsus3r@10.6.242.107:27017,10.6.242.237:27017/?authSource=provtool&authMechanism=SCRAM-SHA-1
+
+eureka.client.enabled: false
+ribbon.eureka.enabled: false
+
+admin:
+  ribbon:
+    listOfServers: ewsdev.lab.securustech.net:8761
+
+es:
+  index-name:
+    summary: summary-dev
+    dtnsummary: dtn-dev
+    inmate: inmate-info-dev
+    facilityhierarchy: facility-hierarchy-dev
+    inmateform: inmate-form-config-dev
+
+  docType: _doc
+  dtn: dtnSummary
+  docTypeNm:
+    inmate: inmateSummary
+  sink:
+    retry:
+      attempts: 3
+      delay:
+        ms: 3000
+
+cdrmart:
+  datasource:
+    tomcat:
+      driver-class-name: oracle.jdbc.OracleDriver # Fully qualified name of the JDBC driver. Auto-detected based on the URL by default.
+      url: jdbc:oracle:thin:@//xd01-scan.lab.securustech.net:1540/CDRDEV # JDBC url of the database.
+      username: ews_app_user
+      password: ews_app_user
+      testOnConnect: true
+      testOnReturn: true
+      testOnBorrow: true
+      testWhileIdle: true
+      removeAbandoned: true
+      validationQuery: "select 1 from dual"
+      validationQueryTimeout: 60
+      timeBetweenEvictionRunsMillis: 3600000
+      logAbandoned: true
+      initialSize: 10
+      maxActive: 10
+      maxIdle: 10
+      minIdle: 10
+
+cdrrecording:
+  datasource:
+    tomcat:
+      driver-class-name: oracle.jdbc.driver.OracleDriver # Fully qualified name of the JDBC driver. Auto-detected based on the URL by default.
+      url: jdbc:oracle:thin:@//xd01-scan.lab.securustech.net:1540/RECMDEV # JDBC url of the database.
+      username: ews_app_user
+      password: ews_app_user
+      testOnConnect: true
+      testOnReturn: true
+      testOnBorrow: true
+      testWhileIdle: true
+      removeAbandoned: true
+      validationQuery: "select 1 from dual"
+      validationQueryTimeout: 60
+      timeBetweenEvictionRunsMillis: 3600000
+      logAbandoned: true
+      initialSize: 10
+      maxActive: 10
+      maxIdle: 10
+      minIdle: 10
+
+cdratlantarecording:  #need to replace with correct url, etc
+  datasource:
+    tomcat:
+      driver-class-name: oracle.jdbc.driver.OracleDriver # Fully qualified name of the JDBC driver. Auto-detected based on the URL by default.
+      url: jdbc:oracle:thin:@//xd01-scan.lab.securustech.net:1540/RECADEV # JDBC url of the database.
+      username: ews_app_user
+      password: ews_app_user
+      testOnConnect: true
+      testOnReturn: true
+      testOnBorrow: true
+      testWhileIdle: true
+      removeAbandoned: true
+      validationQuery: "select 1 from dual"
+      validationQueryTimeout: 60
+      timeBetweenEvictionRunsMillis: 3600000
+      logAbandoned: true
+      initialSize: 10
+      maxActive: 10
+      maxIdle: 10
+      minIdle: 10
+
+billing:
+  customer.service.url: http://ld-billing01.corp.securustech.net:8083/dev-ng-svv/billingservice/billingservice.svc
+  service.url:  http://ld-billing01.corp.securustech.net:8084/DEV/VideoService/v1
+  setup:
+    site.id: 00000
+    validation.plan: video-visitation
+  service:
+    code: VGENERIC
+  debit:
+    service:
+      url: http://ld-billing01.corp.securustech.net:8088/DEV/SCPDebitSvc/SCPDebitService.asmx
+      new.url: http://ld-billing01.corp.securustech.net:8088/DEV/BillingDebitSvc/BillingDebitService.asmx
+      action:
+        baseUrl: http://securustech.net/webservices/Securus.Corp.SCPDebit
+        activateCreateAccountUrl: ${billing.debit.service.action.baseUrl}/ActivateCreateAccount
+        activeCallCheckUrl: ${billing.debit.service.action.baseUrl}/ActiveCallCheck
+        accountByInmateIdUrl: ${billing.debit.service.action.baseUrl}/GetAccountByInmateID
+        deactivateAccountUrl: ${billing.debit.service.action.baseUrl}/DeactivateAccount
+        getInmateTransactionsUrl: ${billing.debit.service.action.baseUrl}/GetInmateTransactions
+        addFundsUrl: ${billing.debit.service.action.baseUrl}/AddFunds
+        addTransactionUrl: ${billing.debit.service.action.baseUrl}/AddTransaction
+        getCashFlowSettingUrl: ${billing.debit.service.action.baseUrl}/GetCashFlowSetting
+        postDebitUrl:  ${billing.debit.service.action.baseUrl}/PostDebit
+        postCreditUrl: ${billing.debit.service.action.baseUrl}/PostCredit
+
+crmgateway:
+  customer.service.url: http://psl-entapp01.corp.securustech.net:8083/qa/crmgateway/crmgateway.svc
+
+ems:
+  datasource:
+        tomcat:
+          driver-class-name: oracle.jdbc.driver.OracleDriver # Fully qualified name of the JDBC driver. Auto-detected based on the URL by default.
+          url: jdbc:oracle:thin:@//xd01-scan.lab.securustech.net:1540/SCNDEV
+          username: scn_ems
+          password: scn_ems
+          testOnConnect: true
+          testOnReturn: true
+          testOnBorrow: true
+          testWhileIdle: true
+          removeAbandoned: true
+          validationQuery: "select 1 from dual"
+          validationQueryTimeout: 60
+          timeBetweenEvictionRunsMillis: 3600000
+          logAbandoned: true
+          initialSize: 10
+          maxActive: 10
+          maxIdle: 10
+          minIdle: 10
+  email.notification.url: http://psl-devnotieng01:8080/ems
+  template.id:
+    manual.approval: 32
+    auto.approval: 75
+    rejected.invalid.id: 72
+    rejected.invalid.picture: 73
+    rejected.invalid.bar.id.picture: 76
+    rejected.other: 74
+  notification:
+    send: ems_notification_send
+
+ews:
+  service:
+    customers:
+      url: http://ewsdev.lab.securustech.net:8761/ews/customers
+  retry:
+    enabled: true
+    schedule:
+      name: RetryFailedEventsEveryMinute
+      frequency: 0 0/10 * ? * *
+    count:
+      max: 3
+  internal:
+    delay: 5000
+    multiplier: 2.0
+    max:
+      attempts: 5
+      delay: 15000
+  timer:
+    retry: ews_timer_retry
+    schedule:
+      event: ews_timer_schedule_event
+    syslog:
+      retry: ews_timer_syslog_retry
+    visits:
+      retry: ews_timer_visits_retry
+  svv:
+    visit:
+      publish: ews_svv_visit_publish
+    vdr:
+      publish: ews_svv_vdr_publish
+  zipkin:
+    enabled: false
+    server: zgreen.lab.securustech.net
+    port: 9411
+
+opentracing:
+  zipkin:
+    http-sender:
+      baseUrl: http://${ews.zipkin.server}:${ews.zipkin.port}
+
+scheduler:
+  service.url: http://10.6.246.40:8080/scheduler/services
+
+3ci:
+  optout:
+    service:
+      url: https://platform.3cinteractive.com:443/api/workflow-initiator.php
+
+mconnstore:
+  service:
+    server: dev=http://10.6.242.224:8080,dev=http://10.6.242.189:8080
+
+# -----------------------------------
+# SVV MYSQL DATABASE CONFIGURATION
+# -----------------------------------
+svv:
+  mysql:
+    datasource:
+      tomcat:
+        url: "jdbc:mysql://10.6.244.38:3306/tcdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+        username: ews_app_user
+        password: ewsAppUser
+        testOnBorrow: true
+        test-while-idle: true
+        removeAbandoned: true
+        validationInterval: 30000
+        timeBetweenEvictionRunsMillis: 30000
+        validationQuery: "select 1"
+        driver-class-name: com.mysql.cj.jdbc.Driver
+  service:
+    url: http://10.6.176.100/api
+  ems:
+    upsert: svv_ems_upsert
+  inmate:
+    move: SVV_INMATE_MOVEMENT_VW
+    upsert: svv_inmate_upsert
+  pvl:
+    initial:
+      load: svv_pvl_initial_load
+    upsert: svv_pvl_upsert
+  rule:
+    upsert: svv_rule_upsert
+  schedule:
+    upsert: svv_schedule_upsert
+  syslog:
+    upsert: svv_syslog_upsert
+  tag:
+    master:
+      initial:
+        load: svv_tag_master_initial_load
+    assc:
+      initial:
+        load: svv_tag_assc_initial_load
+  vdr:
+    upsert: svv_vdr_upsert
+  visit:
+    change: svv_visit_change
+    emergency: svv_visit_emergency
+    initial:
+      load: svv_visit_initial_load
+    upsert: svv_visit_upsert
+  visitor:
+    initial:
+      load: svv_visitor_initial_load
+    upsert: svv_visitor_upsert
+  vfa:
+    initial:
+      load: svv_vfa_initial_load
+
+esp:
+  initialLoad:
+    pageSize: 500
+
+#KAFKA TOPICS
+auditlog:
+  change:
+    upsert: auditlog_change_upsert
+  comm:
+    upsert: auditlog_comm_upsert
+  search:
+    upsert: auditlog_search_upsert
+  system:
+    upsert: auditlog_system_upsert
+  web:
+    upsert: auditlog_web_upsert
+
+eimport:
+  syslog:
+    upsert: eimport_syslog_upsert
+
+cdr:
+  notes:
+    upsert: cdr_notes_upsert
+scp:
+  inmateform:
+    syslog: scp_inmateform_syslog
+
+batch:
+  chunkSize:
+    ngDriven: 1000
+    dataDriven: 1000
+    cdrCommActivity: 1000
+  thread:
+    step:
+      corePoolSize: 30
+      maxPoolSize: 30
+      queueCapacity: 10000
+    job:
+      corePoolSize: 3
+      maxPoolSize: 3
+      queueCapacity: 100
+---

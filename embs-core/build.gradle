@@ -1,0 +1,93 @@
+buildscript {
+
+    ext {
+
+        springBootVersion = '2.2.6.RELEASE'
+        springKafkaVersion = '2.4.4.RELEASE'
+        orgApacheKafkaVersion = '2.3.1'
+        orgApacheAvroVersion = '1.9.2'
+        ewsGradleVersion = '1.2.4_17'
+        lombokVersion = "1.18.12"
+    }
+
+    repositories {
+
+        mavenLocal()
+        mavenCentral()
+
+        maven {
+
+            url "http://es-nexus01.dal.securustech.net/content/repositories/public/"
+        }
+        maven {
+
+            url "http://repository.jboss.org/nexus/content/groups/public/"
+        }
+        maven {
+
+            url "https://repo.spring.io/milestone/"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+
+        classpath "net.securustech.ews:ews-gradle:${ewsGradleVersion}"
+        classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: "${springBootVersion}"
+
+        ant.unjar src: configurations.classpath.find { it.name.matches '.*ews-gradle.*' }, dest: 'build/gradle'
+    }
+}
+
+apply from: 'build/gradle/ews-release.gradle'
+
+println "CALLER@Gradle@BambooBuildNumber >>> " + project.buildNumber
+println "CALLER@Gradle@BambooBuildTime >>> " + project.buildTime
+println "CALLER@Gradle@GitTagName >>> " + project.gitTagName
+
+dependencies {
+
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    compile("org.springframework.boot:spring-boot-starter:${springBootVersion}")
+
+    compile group: 'org.springframework.kafka', name: 'spring-kafka', version: "${springKafkaVersion}"
+    compile 'org.apache.commons:commons-lang3'
+    compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.30.1'
+    compile 'org.aspectj:aspectjweaver'
+
+    compile group: 'org.json', name: 'json', version: '20170516'
+    compile("org.apache.curator:curator-framework:2.12.0")
+    compile group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.6.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0'
+    compile("org.apache.avro:avro:${orgApacheAvroVersion}")
+    compile group: 'org.apache.kafka', name: 'kafka-streams', version: "${orgApacheKafkaVersion}"
+    compile group: 'org.apache.kafka', name: 'kafka-clients', version: "${orgApacheKafkaVersion}"
+    compile group: 'org.codehaus.jackson', name: 'jackson-jaxrs', version: '1.9.9'
+
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}") {
+
+        exclude group: "org.springframework.boot", module: "spring-boot-test-autoconfigure"
+    }
+
+    testCompile 'junit:junit'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+}
+
+
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+jar {
+
+    println "JAR : Project Name :-> $project.name"
+    println "JAR : Project Version :-> $project.version"
+}
+

@@ -1,0 +1,4 @@
+group 'net.securustech.ews'
+
+apply plugin: 'java'
+

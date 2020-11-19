@@ -1,0 +1,7 @@
+group 'net.securustech.ews'
+
+apply plugin: 'java'
+
+dependencies {
+    compile project(":ews-logger")
+}

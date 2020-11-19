@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: embs-producer
+  profiles.active: local
+
+# APACHE KAFKA (KafkaProperties)
+
+  kafka:
+#    client-id: embs_producer # Id to pass to the server when making requests; used for server-side logging.
+#    group-id: mw_embs # Unique string that identifies the consumer group this consumer belongs to.
+    consumer:
+      enable-auto-commit: true # If true the consumer's offset will be periodically committed in the background.
+    visitors:
+      topic: ews_store # Kafka Topic where the Message/Event needs to be sent
+      partition: 0 # Kafka Topic Partition where the Message/Event needs to be sent
+      key: mw_key # Key to be used for the Message Payload
+    visits:
+      topic: svv_visits_upsert # Kafka Topic where the Message/Event needs to be sent
+      partition: 0 # Kafka Topic Partition where the Message/Event needs to be sent
+      key: esp_visits_01 # Key to be used for the Message Payload
+    ems:
+      topic: svv_ems_upsert # Kafka Topic where the Message/Event needs to be sent
+      partition: 0 # Kafka Topic Partition where the Message/Event needs to be sent
+      key: esp_ems_01 # Key to be used for the Message Payload
+    avro:
+      topic: CONNECT_AVRO_TEST # Kafka Topic where the Message/Event needs to be sent
+      partition: 0 # Kafka Topic Partition where the Message/Event needs to be sent
+      key: mw_key # Key to be used for the Message Payload
+    request:
+      timeout:
+        ms: 30000
+    max:
+      block:
+        ms: 30000
+
+logging:
+  file: ./logs/embs-producer_app.log
+logging.level.org: ERROR
+logging.level.net.securustech.embs: INFO
+
+server:
+  port: 8888
+
+---
+
+spring:
+  profiles: local
+
+# ZOOKEEPER
+  cloud.zookeeper.connect-string: ld-midsrvcs01.lab.securustech.net:2181,ld-midsrvcs01.lab.securustech.net:2182
+  #cloud.zookeeper.connect-string: localhost:2181
+
+---
+
+spring:
+  profiles: dev
+
+# ZOOKEEPER
+  cloud.zookeeper.connect-string: ld-midsrvcs01.lab.securustech.net:2181,ld-midsrvcs01.lab.securustech.net:2182
+
+---
+
+spring:
+  profiles: qa
+
+# ZOOKEEPER
+  cloud.zookeeper.connect-string: lq-midsrvcs01.lab.securustech.net:2181,lq-midsrvcs01.lab.securustech.net:2182,lq-midsrvcs02.lab.securustech.net:2181,lq-midsrvcs02.lab.securustech.net:2182
+
+---
+
+spring:
+  profiles: prod
+
+---

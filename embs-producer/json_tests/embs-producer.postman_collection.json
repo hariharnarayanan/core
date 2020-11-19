@@ -1,0 +1,31 @@
+{
+	"variables": [],
+	"info": {
+		"name": "embs-producer",
+		"_postman_id": "1948a43e-38d7-a152-0e77-7f040bd7c8f1",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8888/visitors/create",
+			"request": {
+				"url": "http://localhost:8888/visitors/create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"visitorId\": \"11223344\",\n\t\"crmId\": \"2233\",\n\t\"eventType\": \"VISITOR_CREATE\"\n}"
+				},
+				"description": "Create Visitor for EMBS"
+			},
+			"response": []
+		}
+	]
+}
