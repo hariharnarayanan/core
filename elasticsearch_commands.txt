@@ -1,0 +1,95 @@
+curl -X POST "ld-ngelupg03:9200/_aliases" -H 'Content-Type: application/json' -d'
+{
+    "actions" : [
+        { "add" : { "index" : "summary-dev-v2.0.45_new", "alias" : "summary-dev" } }
+    ]
+}
+
+curl -X POST "ld-ngelupg03:9200/_aliases" -H 'Content-Type: application/json' -d'
+{
+    "actions" : [
+        { "add" : { "index" : "summary-dev-v2.0.45_new", "alias" : "summary-dev" } }
+    ]
+}
+
+{
+    "actions" : [
+        { "remove" : { "index" : "cdr-dev-v2.0.46", "alias" : "cdr-dev" } },
+         { "add" : { "index" : "cdr-dev-201811-v2.0.46_new", "alias" : "cdr-dev-201811" } }
+    ]
+}
+
+{
+    "actions" : [
+        { "add" : { "index" : "tags-cdr-v2.0.45_new", "alias" : "tags-cdr" } }
+    ]
+}
+
+'
+
+ld-ngelupg03:9200/summary-dev-v2.0.45_new
+
+
+curl -XPUT -H "Content-Type: application/json" http://ld-ngelupg03:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": false}
+
+
+{
+   "query":{
+      "bool":{
+         "must":[
+            {
+               "match":{
+                  "inmateFirstNm":"Lucious"
+               }
+            },
+            {
+              "match": {
+                "inmateLastNm": "JACKSON"
+              }
+            }
+         ]
+      }
+   }
+}
+
+{
+  "query": {
+    "match": {
+      "inmateFirstNm":"Lucious"
+    }
+  }
+}
+
+11000026538
+11001024961
+
+esp-visits
+cdr-dev - cdr-dev-yyyyMM  - available in new ES
+inmate-activity-dev - inmate-activity-dev-yyyyMM - _new index not found
+sync CDR notes - no usage
+
+ews-visits
+notes uses cdr-dev-yyyyMM index alias
+Tags -> add/update tag uses cdr-dev-yyyyMM index alias, however there is a remove/update tag count that uses tags-cdr index
+created tags-cdr alias for index tags-cdr-v2.0.45_new
+
+ews-inmates 
+summary-dev alias created for summary-dev-v2.0.45_new index
+
+esp-inmates
+summary-dev alias created for summary-dev-v2.0.45_new index
+
+
+POST inmate-info-qal/_delete_by_query?refresh=true&slices=5&conflicts=proceed
+{
+  "query": {
+    
+        "terms": {
+          "customerId": [
+            "I-300347"
+          ]
+        }
+      }
+}
+
+POST dtn-info-qal/_delete_by_query?refresh=true&slices=5&conflicts=proceed
